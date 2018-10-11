@@ -1,12 +1,4 @@
 window.onload = function() {
-  /*   var header = document.createElement("h1");
-  console.log(header);
-  header.innerText = "Работа с таблицами CSV";
-  document.getElementById("main").appendChild(header); */
-  /* var input = document.createElement("input");
-  input.setAttribute("type", "file");
-  document.getElementById("main").appendChild(input); */
-
   var table = document.createElement("table"); // Создаем элемент таблицу для вывода
   table.setAttribute("id", "mainTable"); // задаем id
   table.className = "table table-responsive striped"; // украшаем bootstrap классами
@@ -17,11 +9,11 @@ window.onload = function() {
     .addEventListener("change", onFilesSelect, false); // слушаем событие изменение выбора файла и обрабатываем его
 };
 
+const columnMJFile = [1, 2, 3, 4, 7, 8, 9]; // номера колонок используемых в выборке из файла МУ_по_МЖ..
+const columnExportFile = [2, 3, 5, 6]; //номера колонок используемых в выборке из файлов export..
 var filterTypeFles = /.csv/;
 var filterNameFiles = /МУ_по_МЖ/; //, /export/]
 var currentFileName = "";
-const columnMJFile = [1, 2, 3, 4, 7, 8, 9]; // номера колонок используемых в выборке из файла МУ_по_МЖ..
-const columnExportFile = [2, 3, 6]; //номера колонок используемых в выборке из файлов export..
 var Export_Array = [];
 var MY_MJ_Array = [];
 
@@ -138,4 +130,12 @@ function isShowColumn(columns, i) {
 }
 
 // Непосредственно выборка и обработка данных
-function completeCombiner(fArray1, farray2) {}
+function completeCombiner(Export_Array, MY_MJ_Array) {
+  var resultArray = [];
+}
+
+function getAddinationData(selectivArray, selectivedRow) {
+  selectivArray.map(function(row) {
+    row.array.forEach(element => {});
+  });
+}
