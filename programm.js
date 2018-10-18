@@ -1,5 +1,4 @@
 window.onload = function() {
-  let progress = document.getElementById("progressDiv");
   let progressBar = document.getElementById("progressBar");
   progressBar.style.width = "0%";
   progressBar.innerText = progressBar.style.width;
@@ -107,9 +106,9 @@ function printArray(array) {
         { title: "Регистраци по" }, // 4
         { title: "Дата снятия с регистрации" }, // 5
         { title: "Дата приема заявления" }, // 6
-        { title: "Статус дела" }, // 7
-        { title: "Разница мужду датой регистрации и сегодня" }, // 8
-        { title: "Разница мужду датой регистрации и датой приема" } // 9
+        { title: "Разница мужду датой регистрации или сегодня" }, // 7
+        { title: "Разница мужду датой регистрации и датой приема" }, // 8
+        { title: "Статус дела" } // 9
       ],
       lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
       columnDefs: [
@@ -124,13 +123,18 @@ function printArray(array) {
           searchable: false
         },
         {
+          targets: [5],
+          visible: false,
+          searchable: false
+        },
+        {
           targets: [9],
           visible: false,
           searchable: false
         },
         {
           targets: [7],
-          visible: false,
+          visible: true,
           searchable: false
         }
       ],
@@ -214,49 +218,51 @@ function joinOnColumn(array_1, array_2) {
           const a2_element = array_2[keyA2];
           // Связываем по фамилии
           // Проверяем разницу дат больше PERIOD_OF_VIOLATION_IN_DAY между датой регистрации и датой приемо заявлений
-          if (
-            a1_element[0] == "Регистрация на РВП" &&
-            a1_element[1] === a2_element[1] &&
-            IsViolan(a1_element[3], a2_element[0])
-          ) {
-            console.log(
-              "Выбрали в результирующий массив:",
-              a1_element,
-              a2_element[0],
-              a2_element[2],
-              a2_element[3]
-            );
-            a1_element.push(a2_element[0]);
-            let tmpStr = "";
-            tmpStr =
-              "Разница: " +
-              tempus(a1_element[3]).between(tempus(a2_element[0], "day"));
-            console.log(JSON.stringify(tmpStr));
-            a1_element.push(JSON.stringify(tmpStr));
-            a1_element[a1_element.length] = tmpStr;
+          if (a1_element[0] == "Регистрация на РВП" && a1_element[5] == "-") {
+            if (
+              a1_element[1] === a2_element[1] &&
+              IsViolan(a1_element[3], a2_element[0])
+            ) {
+              console.log(
+                "Выбрали в результирующий массив:",
+                a1_element,
+                a2_element[0],
+                a2_element[2],
+                a2_element[3]
+              );
+              a1_element.push(a2_element[0]);
+              let tmpStr =
+                tempus(a1_element[3]).between(tempus(a2_element[0]), "day") +
+                " дней";
+              console.log(tmpStr);
+              a1_element.push(tmpStr);
+              a1_element[a1_element.length] = tmpStr;
 
-            // a1_element.push(a2_element[2]);
-            //a1_element.push(a2_element[3]);
-            tmpAr.push(a1_element); // Выборка с учетом expoкta
-            RESULT_DATA_ARRAY.push(a1_element);
-            setProgressBar();
+              // a1_element.push(a2_element[2]);
+              //a1_element.push(a2_element[3]);
+              tmpAr.push(a1_element); // Выборка с учетом expoкta
+              RESULT_DATA_ARRAY.push(a1_element);
+              setProgressBar();
+            }
           }
         }
       }
     }
   }
 
-  /* for (const key in tmpAr) {
+  /*   for (const key in tmpAr) {
     if (tmpAr.hasOwnProperty(key)) {
       const element = tmpAr[key];
       for (const keyS in array_1) {
         if (array_1.hasOwnProperty(keyS)) {
           const elAr1 = array_1[keyS];
+
           //Условие разницы дат больше PERIOD_OF_VIOLATION_IN_DAY между датой регистрации и сегодня
           if (element[1] != elAr1[1] && IsViolan(a1_element[3], now)) {
             element.push(tempus(element[3]).between(tempus(), "day"));
             elAr1.push(a1_element);
             RESULT_DATA_ARRAY.push(elAr1);
+
           }
         }
       }
@@ -272,8 +278,8 @@ function IsViolan(pastDate, dateOfFuture) {
   let date1 = tempus(pastDate);
   let date2 = tempus(dateOfFuture);
   let delta = date1.between(date2, "day");
+  console.log("Даты на проверку: ", pastDate, dateOfFuture);
   if (delta >= PERIOD_OF_VIOLATION_IN_DAY) {
-    console.log("Даты на проверку: ", pastDate, dateOfFuture);
     console.log("Начальная дата: ", date1);
     console.log("Конечная дата: ", date2);
     console.log("Разница дат: ", delta);
