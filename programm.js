@@ -1,8 +1,7 @@
-window.onload = function() {
-  let progressBar = document.getElementById("progressBar");
+window.onload = function () {
+  var progressBar = document.getElementById("progressBar");
   progressBar.style.width = "0%";
   progressBar.innerText = progressBar.style.width;
-  /* progress.style.visibility = "hidden"; */
   document
     .querySelector("#inputGroupFile04")
     .addEventListener("change", onFilesSelect, false); // слушаем событие изменение выбора файла и обрабатываем его
@@ -16,13 +15,13 @@ var currentFileName = "";
 var Export_Array = [];
 var MY_MJ_Array = [];
 var RESULT_DATA_ARRAY = [];
-var PERIOD_OF_VIOLATION_IN_DAY = 60; // Срок в днях для обнаружения нарушений сроков
+var PERIOD_OF_VIOLATION_IN_DAY = 420; // Срок в днях для обнаружения нарушений сроков
 
 function onFilesSelect(e) {
   var csv = e.target.files; // выбранные файлы
   var errorFiles = []; // файлы с ошибками
 
-  for (let index = 0; index < csv.length; index++) {
+  for (var index = 0; index < csv.length; index++) {
     // обходим список файлов
     if (filterTypeFles.test(csv[index].name)) {
       // фильтруем выбраные файлы по маске в filterTypeFiles
@@ -43,10 +42,10 @@ function onFilesSelect(e) {
   console.log("Файлы сошибками:", errorFiles);
   errorFiles.length > 0
     ? alert(
-        "Выполнение программы продолжится после нажатия на кнопку ОКNСледующий файл или файлы имеет не подходящий формат\n" +
-          errorFiles.join("\n") +
-          "В этом нет ничего страшного.\n Данная информация предназначена для ознакомления.\n Пока все работает в штатном режиме.\n"
-      )
+      "Выполнение программы продолжится после нажатия на кнопку ОК\nСледующий файл или файлы имеет не подходящий формат\n" +
+      errorFiles.join("\n") +
+      "В этом нет ничего страшного.\n Данная информация предназначена для ознакомления.\n Пока все работает в штатном режиме.\n"
+    )
     : console.log("Все файлы имеют удовлетворительный формат");
 }
 
@@ -55,7 +54,7 @@ function loadExport(evt) {
   var fileString = evt.target.result;
   Papa.parse(fileString, {
     step: filExportArray,
-    complete: function(results) {
+    complete: function (results) {
       console.log(
         "Папа закончил работу с файлом: ",
         fileString.name,
@@ -71,7 +70,7 @@ function loadExport(evt) {
 function loadMJ(evt) {
   Papa.parse(evt.target.result, {
     step: filMY_MJ_Array,
-    complete: function(results) {
+    complete: function (results) {
       console.log("Папа загрузил МУ_по_МЖ", results.data.length);
     }
   });
@@ -82,11 +81,11 @@ function loadMJ(evt) {
 // Функция печать массива на страницу
 function printArray(array) {
   //document.getElementById("main").appendChild(table); */
-  let newtabla = document.createElement("table");
+  var newtabla = document.createElement("table");
   newtabla.setAttribute("id", "dataTable");
   newtabla.classList = "table table-striped table-sm";
   document.getElementById("main").appendChild(newtabla);
-  $("#dataTable").ready(function() {
+  $("#dataTable").ready(function () {
     $("#dataTable").DataTable({
       columns: [
         null,
@@ -105,9 +104,9 @@ function printArray(array) {
         { title: "Дата регистрации с" }, // 3
         { title: "Регистраци по" }, // 4
         { title: "Дата снятия с регистрации" }, // 5
-        { title: "Дата приема заявления" }, // 6
-        { title: "Разница мужду датой регистрации или сегодня" }, // 7
-        { title: "Разница мужду датой регистрации и датой приема" }, // 8
+        { title: "Дата приема заявления (или сегодня)" }, // 6
+        { title: "Комментарий нарушения" }, // 7
+        { title: "Комментарий нарушения" }, // 8
         { title: "Статус дела" } // 9
       ],
       lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -118,22 +117,12 @@ function printArray(array) {
           searchable: false
         },
         {
-          targets: [8],
-          visible: false,
-          searchable: false
-        },
-        {
           targets: [5],
           visible: false,
           searchable: false
         },
         {
           targets: [9],
-          visible: false,
-          searchable: false
-        },
-        {
-          targets: [7],
           visible: true,
           searchable: false
         }
@@ -172,9 +161,9 @@ function printArray(array) {
 // Заполнение массива хранящего все значения файлов export согласно указанным номерам столбцов
 function filExportArray(row) {
   var curRow = row.data[0];
-  let expRow = [];
-  let j = 0;
-  for (let i = 0; i < curRow.length; i++) {
+  var expRow = [];
+  var j = 0;
+  for (var i = 0; i < curRow.length; i++) {
     if (isShowColumn(columnExportFile, i)) {
       expRow[j] = curRow[i];
       j++;
@@ -187,8 +176,8 @@ function filExportArray(row) {
 function filMY_MJ_Array(row) {
   var curRow = row.data[0];
   var formatedRow = [];
-  let j = 0;
-  for (let i = 0; i < curRow.length; i++) {
+  var j = 0;
+  for (var i = 0; i < curRow.length; i++) {
     if (isShowColumn(columnMJFile, i)) {
       formatedRow[j] = curRow[i];
       j++;
@@ -199,7 +188,7 @@ function filMY_MJ_Array(row) {
 
 // Проверка соответствия заданным столбцам
 function isShowColumn(columns, i) {
-  for (let index = 0; index < columns.length; index++) {
+  for (var index = 0; index < columns.length; index++) {
     if (columns[index] === i) return true;
   }
   return false;
@@ -207,104 +196,60 @@ function isShowColumn(columns, i) {
 
 // Непосредственно выборка и обработка данных
 function joinOnColumn(array_1, array_2) {
-  let tmpAr = [];
 
-  for (const keyA1 in array_1) {
-    if (array_1.hasOwnProperty(keyA1)) {
-      const a1_element = array_1[keyA1];
+  for (const keyA2 in array_2) {
+    if (array_2.hasOwnProperty(keyA2)) {
+      const a2_element = array_2[keyA2];
 
-      for (const keyA2 in array_2) {
-        if (array_2.hasOwnProperty(keyA2)) {
-          const a2_element = array_2[keyA2];
-          // Связываем по фамилии
-          // Проверяем разницу дат больше PERIOD_OF_VIOLATION_IN_DAY между датой регистрации и датой приемо заявлений
-          if (a1_element[0] == "Регистрация на РВП" && a1_element[5] == "-") {
-            if (
-              a1_element[1] === a2_element[1] &&
-              IsViolan(a1_element[3], a2_element[0])
-            ) {
-              console.log(
-                "Выбрали в результирующий массив:",
-                a1_element,
-                a2_element[0],
-                a2_element[2],
-                a2_element[3]
-              );
-              a1_element.push(a2_element[0]);
-              let tmpStr =
-                tempus(a1_element[3]).between(tempus(a2_element[0]), "day") +
-                " дней";
-              console.log(tmpStr);
-              a1_element.push(tmpStr);
-              a1_element[a1_element.length] = tmpStr;
+      for (const keyA1 in array_1) {
+        if (array_1.hasOwnProperty(keyA1)) {
+          const a1_element = array_1[keyA1];
+          if (
+            a1_element[0] == "Регистрация на РВП" && // Выбираем тип регистрации
+            a1_element[5] == "-" // Выбираем те кто еще не снялся с учета
+          ) {
 
-              // a1_element.push(a2_element[2]);
-              //a1_element.push(a2_element[3]);
-              tmpAr.push(a1_element); // Выборка с учетом expoкta
-              RESULT_DATA_ARRAY.push(a1_element);
-              setProgressBar();
+            var registrationDate = new Date(Date.parse(a1_element[3].replace(/(\d+) (\d+) (\d+)/, '$2/$1/$3')));// Дата регистрации
+            // console.log("Прочитана дата регистрации: ", a1_element[3]);
+            // console.log("Разобралась дата регистрации: ", registrationDate.toDateString());
+
+            if (a1_element[1] == a2_element[1]) {// Сопоставляем элементы по фамилии
+              var statementDate = new Date(Date.parse(a2_element[0].replace(/(\d+).(\d+).(\d+)/, '$2/$1/$3')));// Дата подачи заявления
+              // console.log("Прочитана дата подачи заявления: ", a2_element[0]);
+              // console.log("Разобрана дата подачи заявления: ", statementDate.toDateString());
+              var difjs = (statementDate - registrationDate) / (1000 * 60 * 60 * 24);
+              if (difjs >= PERIOD_OF_VIOLATION_IN_DAY) { // Выявляем нарушение сроков подачи
+                var addRow = [];
+                for (let i = 0; i < a1_element.length; i++) {
+                  addRow[i] = a1_element[i];
+                }
+                addRow.push(a2_element[0]); // Добавляем дату подачи
+                addRow.push("Заявление подано с опозданием на " + Math.round(difjs - PERIOD_OF_VIOLATION_IN_DAY) + " дней");// Добавляе разницу
+                console.log("Добавлен элемент:", addRow);
+                RESULT_DATA_ARRAY.push(addRow);
+              }
+            } else {
+              var toDay = new Date();
+              var difUnreg = (toDay - registrationDate) / (1000 * 60 * 60 * 24);
+              if (
+                difUnreg >= PERIOD_OF_VIOLATION_IN_DAY// Выявляем нарушение сроков не подачи
+              ) {
+                var addRow = [];
+                for (let i = 0; i < a1_element.length; i++) {
+                  addRow[i] = a1_element[i];
+                }
+                addRow.push(toDay.toLocaleDateString());
+                addRow.push("Пропущен максимальный срок подачи заявления на " + Math.round(difUnreg - PERIOD_OF_VIOLATION_IN_DAY) + " дней");
+                console.log("Добавлен элемент:", addRow);
+                RESULT_DATA_ARRAY.push(addRow);
+              }
             }
           }
         }
       }
     }
   }
-
-  /*   for (const key in tmpAr) {
-    if (tmpAr.hasOwnProperty(key)) {
-      const element = tmpAr[key];
-      for (const keyS in array_1) {
-        if (array_1.hasOwnProperty(keyS)) {
-          const elAr1 = array_1[keyS];
-
-          //Условие разницы дат больше PERIOD_OF_VIOLATION_IN_DAY между датой регистрации и сегодня
-          if (element[1] != elAr1[1] && IsViolan(a1_element[3], now)) {
-            element.push(tempus(element[3]).between(tempus(), "day"));
-            elAr1.push(a1_element);
-            RESULT_DATA_ARRAY.push(elAr1);
-
-          }
-        }
-      }
-    }
-  } */
-
   progressBar.innerHTML = "Сравнение выполнено!";
   printArray(RESULT_DATA_ARRAY);
   /*if (RESULT_DATA_ARRAY.length > 0) downloadButton(RESULT_DATA_ARRAY); */
 }
-
-function IsViolan(pastDate, dateOfFuture) {
-  let date1 = tempus(pastDate);
-  let date2 = tempus(dateOfFuture);
-  let delta = date1.between(date2, "day");
-  console.log("Даты на проверку: ", pastDate, dateOfFuture);
-  if (delta >= PERIOD_OF_VIOLATION_IN_DAY) {
-    console.log("Начальная дата: ", date1);
-    console.log("Конечная дата: ", date2);
-    console.log("Разница дат: ", delta);
-    return true;
-  } else return false;
-}
-
-function setProgressBar() {
-  let progressBar = document.getElementById("progressBar");
-  progressBar.style.width = 10 + "%";
-  progressBar.innerText = progressBar.style.width;
-}
-
-/* 
-function downloadButton(arrayForDown) {
-  var typedArray = JSON.stringify(arrayForDown);
-  var blob = new Blob([typedArray.buffer], {
-    type: "application/octet-stream"
-  }); // pass a useful mime type here
-  var url = URL.createObjectURL(blob);
-  var downHref = document.createElement("a");
-  downHref.classList = "nav-item nav-link";
-  downHref.setAttribute("data-toggle", "tab");
-  downHref.setAttribute("role", "tab");
-  downHref.setAttribute("href", url);
-  downHref.innerHTML = "Скачать таблицу";
-  document.querySelector("#nav-tab").appendChild(downHref);
-} */
